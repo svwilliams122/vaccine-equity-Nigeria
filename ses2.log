@@ -1,0 +1,3290 @@
+-----------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\willi\Documents\Masters\Project\DHS Nigeria 2018 stata\ses2.log
+  log type:  text
+ opened on:   6 Sep 2020, 18:17:07
+
+. 
+. *Make weight variable and strata
+
+. 
+. gen weight=v005/1000000
+
+. 
+. gen strata=v024
+
+. 
+. replace strata=v024*100 if v025==2
+(22,225 real changes made)
+
+. 
+. svyset v021 [pweight=weight], strata(strata)single(cen)
+
+      pweight: weight
+          VCE: linearized
+  Single unit: centered
+     Strata 1: strata
+         SU 1: v021
+        FPC 1: <zero>
+
+. tab v131
+
+      ethnicity |      Freq.     Percent        Cum.
+----------------+-----------------------------------
+           ekoi |        154        0.45        0.45
+         fulani |      3,218        9.49        9.94
+          hausa |     11,010       32.45       42.39
+         ibibio |        471        1.39       43.78
+          igala |        318        0.94       44.72
+           igbo |      4,496       13.25       57.97
+      ijaw/izon |        779        2.30       60.27
+kanuri/beriberi |        834        2.46       62.73
+            tiv |        750        2.21       64.94
+         yoruba |      3,223        9.50       74.44
+          other |      8,638       25.46       99.90
+     don't know |         33        0.10      100.00
+----------------+-----------------------------------
+          Total |     33,924      100.00
+
+. codebook v131
+
+-----------------------------------------------------------------------------------------------------------------------
+v131                                                                                                          ethnicity
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V131
+
+                 range:  [1,98]                       units:  1
+         unique values:  12                       missing .:  0/33,924
+
+              examples:  3     hausa
+                         3     hausa
+                         7     ijaw/izon
+                         96    other
+
+. *rename variables characteristics
+
+. 
+. rename b4 childsex
+
+. 
+. rename b19 childagemth
+
+. 
+. rename v714 employed
+
+. 
+. rename v130 religion
+
+. 
+. rename v170 bankaccount
+
+. 
+. rename v151 sexhh
+
+. 
+. rename v190 wealthindex
+
+. 
+. rename v190a wealthindexur
+
+. 
+. rename v481 healthinsur
+
+. 
+. rename b5 childdead
+
+. 
+. rename v140 urbrurdj
+
+. 
+. rename v139 regiondj
+
+. 
+. rename v101 regiondf
+
+. 
+. rename v102 urbrurdf
+
+. 
+. rename v717 occupation
+
+. 
+. 
+. 
+. *Generate binary variables and smaller number of categories
+
+. 
+. gen ethnicity=v131
+
+. 
+. recode ethnicity 1 = 1 2 = 2 3 = 3 4 = 4 5 = 5 6 = 6 7 = 7 8 = 8 9 = 9 10 = 10 96/98 = 11
+(ethnicity: 8671 changes made)
+
+. 
+. label var ethnicity "Ethnicity"
+
+. 
+. label define ethnicitycodes 1 "Ekoi" 2 "Fulani" 3 "Hausa" 4 "Ibibio" 5 "Igala" 6 "Igbo" 7 "Ijaw/Izon" 8 "Kanuri/Berib
+> eri" 9 "Tiv" 10 "Yoruba" 11 "Other/Don't know"
+
+. 
+. label values ethnicity ethnicitycodes
+
+. 
+. 
+. 
+. gen bthorder=bord
+
+. 
+. recode bthorder 1 = 1 2/3 = 2 4/5 = 3 6/max = 4
+(bthorder: 21325 changes made)
+
+. 
+. label var bthorder "Birthorder"
+
+. 
+. label define bthordercodes 1 "1st born" 2 "2nd - 3rd born" 3 "4th - 5th born" 4 "6th born or higher"
+
+. 
+. label values bthorder bthordercodes
+
+. 
+. 
+. 
+. gen totchild=v201
+
+. 
+. recode totchild 1/2 = 1 3/5 = 2 6/9 = 3 10/max = 4
+(totchild: 30209 changes made)
+
+. 
+. label var totchild "Total number of children"
+
+. 
+. label define totchildcodes 1 "1 - 2" 2 "3 - 5" 3 "6 - 9" 4 "10 or more"
+
+. 
+. label values totchild totchildcodes
+
+. 
+. 
+. 
+. gen lit=v155
+
+. 
+. recode lit 1/2 = 1 0 = 0 3/4 = 0
+(lit: 7969 changes made)
+
+. 
+. label var lit "Able to read"
+
+. 
+. label define litcodes 0 "No" 1 "Yes"
+
+. 
+. label values lit litcodes
+
+. 
+. 
+. 
+. gen matage=v012
+
+. 
+. recode matage 15/19 = 1 20/34 = 2 35/49 = 3
+(matage: 33924 changes made)
+
+. 
+. label var matage "Maternal age now"
+
+. 
+. label define matagecodes 1 "15 - 19 years" 2 "20 - 34 years" 3 "35 - 49 years"
+
+. 
+. label values matage matagecodes
+
+. 
+. 
+. 
+. gen age1stb=v212
+
+. 
+. recode age1stb min/14 = 1 15/19 = 2 20/34 = 3 35/49 = 4
+(age1stb: 33924 changes made)
+
+. 
+. label var age1stb "Age at 1st birth"
+
+. 
+. label define age1stbcodes 1 "Under 15 years" 2 "15 - 19 years" 3 "20 - 34 years" 4 "35 - 49 years"
+
+. 
+. label values age1stb age1stbcodes
+
+. 
+. 
+. 
+. gen ownshouse=v745a
+
+. 
+. recode ownshouse 0 = 0 1/3 = 1
+(ownshouse: 3250 changes made)
+
+. 
+. label var ownshouse "Owns house"
+
+. 
+. label define ownshousecodes 0 "No" 1 "Yes, alone or jointly"
+
+. 
+. label values ownshouse ownshousecodes
+
+. 
+. 
+. 
+. gen ownsland=v745b
+
+. 
+. recode ownsland 0 = 0 1/3 = 1
+(ownsland: 3074 changes made)
+
+. 
+. label var ownsland "Owns land"
+
+. 
+. label define ownslandcodes 0 "No" 1 "Yes, alone or jointly"
+
+. 
+. label values ownsland ownslandcodes
+
+. 
+. 
+. 
+. gen agehh=v152
+
+. 
+. recode agehh min/19 = 1 20/49 = 2 50/65 = 3 66/max = 4
+(agehh: 33924 changes made)
+
+. 
+. label var agehh "Age of head of household"
+
+. 
+. label define agehhcodes 1 "Under 20 years" 2 "20 - 49 years" 3 "50 - 65 years" 4 "Aged over 65 years"
+
+. 
+. label values agehh agehhcodes
+
+. 
+. 
+. 
+. gen delivery=m15
+
+. 
+. recode delivery 11/12 = 1 21/36 = 2 96 = 3
+(delivery: 33924 changes made)
+
+. 
+. label var delivery "Birth setting"
+
+. 
+. label define deliverycodes 1 "Home setting" 2 "Public or private facility" 3 "Other"
+
+. 
+. label values delivery deliverycodes
+
+. 
+. 
+. 
+. gen anc=m14
+(12,132 missing values generated)
+
+. 
+. recode anc 0 = 1 98 = 1 1/3 = 2 4/20 = 3
+(anc: 20824 changes made)
+
+. 
+. label var anc "Antenatal care"
+
+. 
+. label define anccodes 1 "None/Don't know" 2 "1 - 3 visits" 3 "4 or more visits"
+
+. 
+. label values anc anccodes
+
+. 
+. 
+. 
+. gen edulevel = v106
+
+. 
+. recode edulevel 0 = 1 1 = 2 2/3 = 3
+(edulevel: 31288 changes made)
+
+. 
+. label var edulevel "Education level"
+
+. 
+. label define edulevelcodes 1 "No education" 2 "Primary education" 3 "Secondary or higher"
+
+. 
+. label values edulevel edulevelcodes
+
+. 
+. 
+. 
+. *Make vaccination age category
+
+. 
+. gen agevac = childagemth
+
+. 
+. recode agevac min/11 = 1 12/23 = 2 24/max = 3
+(agevac: 33383 changes made)
+
+. 
+. label var agevac "Grouped child ages, months"
+
+. 
+. label define agevaccodes 1 "<12 months" 2 "12-23 months" 3 "24-59 months"
+
+. 
+. label values agevac agevaccodes
+
+. 
+. 
+. 
+. *Generate vaccination variables
+
+. 
+. gen healthcard = h1
+(15,632 missing values generated)
+
+. 
+. recode healthcard 1/2 = 1 0 = 0 3 = 0
+(healthcard: 4810 changes made)
+
+. 
+. label var healthcard "Has healthcard"
+
+. 
+. label define healthcardcodes 1 "Yes" 0 "No"
+
+. 
+. label values healthcard healthcardcodes
+
+. 
+. 
+. 
+. gen bcg = h2
+(15,632 missing values generated)
+
+. 
+. recode bcg 1/3 = 1 0 = 0 8 = 0
+(bcg: 5389 changes made)
+
+. 
+. label var bcg "Received BCG"
+
+. 
+. label define bcgcodes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values bcg bcgcodes
+
+. 
+. 
+. 
+. gen dpt1 = h3
+(15,632 missing values generated)
+
+. 
+. recode dpt1 1/3 = 1 0 =0 8 =0
+(dpt1: 5010 changes made)
+
+. 
+. label var dpt1 "Received DPT1"
+
+. 
+. label define dpt1codes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values dpt1 dpt1codes
+
+. 
+. 
+. 
+. gen polio1=h4
+(15,632 missing values generated)
+
+. 
+. recode polio1 1/3 = 1 0 = 0 8 = 0
+(polio1: 6333 changes made)
+
+. 
+. label var polio1 "Received polio1"
+
+. 
+. label define polio1codes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values polio1 polio1codes
+
+. 
+. 
+. 
+. gen dpt2=h5
+(15,632 missing values generated)
+
+. 
+. recode dpt2 1/3 = 1 0 =0 8 = 0
+(dpt2: 4090 changes made)
+
+. 
+. label var dpt2 "Received DPT2"
+
+. 
+. label define dpt2codes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values dpt2 dpt2codes
+
+. 
+. 
+. 
+. gen polio2=h6
+(15,632 missing values generated)
+
+. 
+. recode polio2 1/3 = 1 0 = 0 8 = 0
+(polio2: 5446 changes made)
+
+. 
+. label var polio2 "Received polio 2"
+
+. 
+. label define polio2codes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values polio2 polio2codes
+
+. 
+. 
+. 
+. gen dpt3=h7
+(15,632 missing values generated)
+
+. 
+. recode dpt3 1/3 = 1 0 = 0 8 = 0
+(dpt3: 3243 changes made)
+
+. 
+. label var dpt3 "Received DPT 3"
+
+. 
+. label define dpt3codes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values dpt3 dpt3codes
+
+. 
+. 
+. 
+. gen polio3=h8
+(15,632 missing values generated)
+
+. 
+. recode polio3 1/3 = 1 0 = 0 8 = 0
+(polio3: 2709 changes made)
+
+. 
+. label var polio3 "Received polio 3"
+
+. 
+. label define polio3codes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values polio3 polio3codes
+
+. 
+.  
+. 
+. gen measles1=h9
+(15,632 missing values generated)
+
+. 
+. recode measles1 1/3 =1 0 = 0 8 = 0
+(measles1: 4363 changes made)
+
+. 
+. label var measles1 "Received measles 1"
+
+. 
+. label define measles1codes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values measles1 measles1codes
+
+. 
+. 
+. 
+. gen measles2=h9a
+(15,632 missing values generated)
+
+. 
+. recode measles2 1/3 = 1 0 = 0 8 = 0
+(measles2: 1266 changes made)
+
+. 
+. label var measles2 "Received measles 2" 
+
+. 
+. label define measles2codes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values measles2 measles2codes
+
+. 
+. 
+. 
+. gen poliobirth=h0
+(15,632 missing values generated)
+
+. 
+. recode poliobirth 1/3 =1 0 = 0 8 = 0
+(poliobirth: 4113 changes made)
+
+. 
+. label var poliobirth "Received polio at birth"
+
+. 
+. label define poliobirthcodes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values poliobirth poliobirthcodes
+
+. 
+. 
+. 
+. gen evervac=h10
+(23,002 missing values generated)
+
+. 
+. recode evervac 0 = 0 1 = 1 8 = 0
+(evervac: 9 changes made)
+
+. 
+. label var evervac "Ever had any vaccination if no healthcard"
+
+. 
+. label define evervaccodes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values evervac evervaccodes
+
+. 
+.  
+. 
+. gen hepbbirth=h50
+(15,632 missing values generated)
+
+. 
+. recode hepbbirth 1/3 = 1 0 =0 8 = 0
+(hepbbirth: 4311 changes made)
+
+. 
+. label var hepbbirth "Received Hep B at birth"
+
+. 
+. label define hepbbirthcodes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values hepbbirth hepbbirthcodes
+
+. 
+. 
+. 
+. gen penta1=h51
+(15,632 missing values generated)
+
+. 
+. recode penta1 1/3 = 1 0 = 0 8 = 0
+(penta1: 5010 changes made)
+
+. 
+. label var penta1 "Received pentavalent 1"
+
+. 
+. label define penta1codes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values penta1 penta1codes
+
+. 
+. 
+. 
+. gen penta2=h52
+(15,632 missing values generated)
+
+. 
+. recode penta2 1/3 = 1 0 = 0 8 = 0
+(penta2: 4090 changes made)
+
+. 
+. label var penta2 "Received pentavalent 2"
+
+. 
+. label define penta2codes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values penta1 penta2codes
+
+. 
+. 
+. 
+. gen penta3=h53
+(15,632 missing values generated)
+
+. 
+. recode penta3 1/3 = 1 0 = 0 8 = 0
+(penta3: 3243 changes made)
+
+. 
+. label var penta3 "Received pentavalent 3"
+
+. 
+. label define penta3codes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values penta3 penta3codes
+
+. 
+. 
+. 
+. gen pneumo1=h54
+(15,632 missing values generated)
+
+. 
+. recode pneumo1 1/3 = 1 0 = 0 8 = 0
+(pneumo1: 4589 changes made)
+
+. 
+. label var pneumo1 "Received Pneumococcal 1"
+
+. 
+. label define pneumo1codes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values pneumo1 pneumo1codes
+
+. 
+. 
+. 
+. gen pneumo2=h55
+(15,632 missing values generated)
+
+. 
+. recode pneumo2 1/3 = 1 0 = 0 8 = 0
+(pneumo2: 3778 changes made)
+
+. 
+. label var pneumo2 "Received Pneumococcal 2"
+
+. 
+. label define pneumo2codes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values pneumo2 pneumo2codes
+
+. 
+. 
+. 
+. gen pneumo3=h56
+(15,632 missing values generated)
+
+. 
+. recode pneumo3 1/3 = 1 0 = 0 8 = 0
+(pneumo3: 3043 changes made)
+
+. 
+. label var pneumo3 "Received Pneumococcal 3"
+
+. 
+. label define pneumo3codes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values pneumo3 pneumo3codes
+
+. 
+.  
+. 
+. gen polioinactive=h60
+(15,632 missing values generated)
+
+. 
+. recode polioinactive 1/3 = 1 0 = 0 8 = 0
+(polioinactive: 4204 changes made)
+
+. 
+. label var polioinactive "Received polio inactive"
+
+. 
+. label define polioinactivecodes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values polioinactive polioinactivecodes
+
+. 
+. 
+. 
+. gen hepb1=h61
+(15,632 missing values generated)
+
+. 
+. recode hepb1 1/3 = 1 0 = 0 8 = 0
+(hepb1: 5010 changes made)
+
+. 
+. label var hepb1 "Received Hep B 1"
+
+. 
+. label define hepb1codes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values hepb1 hepb1codes
+
+. 
+. 
+. 
+. gen hepb2=h62
+(15,632 missing values generated)
+
+. 
+. recode hepb2 1/3 = 1 0 = 0 8 = 0
+(hepb2: 4090 changes made)
+
+. 
+. label var hepb2 "Received Hep B 2"
+
+. 
+. label define hepb2codes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values hepb2 hepb2codes
+
+. 
+. 
+. 
+. gen hepb3=h63
+(15,632 missing values generated)
+
+. 
+. recode hepb3 1/3 = 1 0 = 0 8 = 0 
+(hepb3: 3243 changes made)
+
+. 
+. label var hepb3 "Received Hep B 3" 
+
+. 
+. label define hepb3codes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values hepb3 hepb3codes 
+
+. 
+.  
+. 
+. gen hib1=h64
+(15,632 missing values generated)
+
+. 
+. recode hib1 1/3 = 1 0 = 0 8 = 0
+(hib1: 5010 changes made)
+
+. 
+. label var hib1 "Received Hib 1"
+
+. 
+. label define hib1codes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values hib1 hib1codes
+
+. 
+.  
+. 
+. gen hib2=h65 
+(15,632 missing values generated)
+
+. 
+. recode hib2 1/3 = 1 0 = 0 8 = 0
+(hib2: 4090 changes made)
+
+. 
+. label var hib2 "Received Hib 2"
+
+. 
+. label define hib2codes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values hib2 hib2codes
+
+. 
+. 
+. 
+. gen hib3=h66 
+(15,632 missing values generated)
+
+. 
+. recode hib3 1/3 = 1 0 = 0 8 = 0
+(hib3: 3243 changes made)
+
+. 
+. label var hib3 "Received Hib 3"
+
+. 
+. label define hib3codes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values hib3 hib3codes
+
+. 
+. *Generate combined vaccination variables
+
+. 
+. gen dptall = dpt1 + dpt2 + dpt3
+(15,632 missing values generated)
+
+. 
+. recode dptall 3 = 1 min/2 = 0
+(dptall: 11053 changes made)
+
+. 
+. label var dptall "Received all three DPT"
+
+. 
+. label define dptallcodes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values dptall dptallcodes
+
+. 
+. 
+. 
+. gen nodpt = dpt1 + dpt2 + dpt3
+(15,632 missing values generated)
+
+. 
+. recode nodpt 0 = 0 1/3 = 1
+(nodpt: 9454 changes made)
+
+. 
+. label var nodpt "Received no DPT vaccines"
+
+. 
+. label define nodptcodes 0 "None" 1 "At least one dose"
+
+. 
+. label values nodpt nodptcodes
+
+. 
+. 
+. 
+. gen hiball = hib1 + hib2 + hib3
+(15,632 missing values generated)
+
+. 
+. recode hiball 3 = 1 min/2 = 0
+(hiball: 11053 changes made)
+
+. 
+. label var hiball "Received all three hib"
+
+. 
+. label define hiballcodes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values hiball hiballcodes
+
+. 
+. 
+. 
+. gen polioall = polio1 + polio2 + polio3
+(15,632 missing values generated)
+
+. 
+. recode polioall 3 = 1 min/2 = 0
+(polioall: 12518 changes made)
+
+. 
+. label var polioall "Received all three polio"
+
+. 
+. label define polioallcodes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values polioall polioallcodes
+
+. 
+. 
+. 
+. gen nopolio = polio1 + polio2 + polio3
+(15,632 missing values generated)
+
+. 
+. recode nopolio 0 = 0 1/3 = 1
+(nopolio: 10892 changes made)
+
+. 
+. label var nopolio "Received no polio"
+
+. 
+. label define nopoliocodes 0 "None" 1 "At least one dose"
+
+. 
+. label values nopolio nopoliocodes
+
+. 
+. 
+. 
+. gen pentaall = penta1 + penta2 + penta3
+(15,632 missing values generated)
+
+. 
+. recode pentaall 3 = 1 min/2 = 0
+(pentaall: 11053 changes made)
+
+. 
+. label var pentaall "Received all three pentavalent"
+
+. 
+. label define pentaallcodes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values pentaall pentallcodes
+
+. 
+. 
+. 
+. gen pneumoall = pneumo1 + pneumo2 + pneumo3
+(15,632 missing values generated)
+
+. 
+. recode pneumoall 3 = 1 min/2 = 0
+(pneumoall: 10317 changes made)
+
+. 
+. label var pneumoall "Received all three pneumococcal"
+
+. 
+. label define pneumoallcodes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values pneumoall pneumoallcodes
+
+. 
+. 
+. 
+. gen hepball = hepb1 + hepb2 + hepb3
+(15,632 missing values generated)
+
+. 
+. recode hepball 3 = 1 min/2 = 0
+(hepball: 11053 changes made)
+
+. 
+. label var hepball "Received all three hep b"
+
+. 
+. label define hepballcodes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values hepball hepballcodes
+
+. 
+. 
+. 
+. gen measlesall = measles1 + measles2
+(15,632 missing values generated)
+
+. 
+. recode measlesall 2 = 1 min/1 = 0
+(measlesall: 7486 changes made)
+
+. 
+. label var measlesall "Received both doses of measles"
+
+. 
+. label define measlesallcodes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values measlesall measlesallcodes
+
+. 
+. 
+. 
+. gen basicvac = bcg + dptall + polioall + measles1
+(15,632 missing values generated)
+
+. 
+. recode basicvac 4 = 1 min/3 = 0
+(basicvac: 13320 changes made)
+
+. 
+. label var basicvac "Received all basic vaccinations"
+
+. 
+. label define basicvaccodes 1 "Yes" 0 "No/Don't know"
+
+. 
+. label values basicvac basicvaccodes
+
+. 
+. 
+. 
+. gen nobasicv = bcg + nodpt + nopolio + measles1
+(15,632 missing values generated)
+
+. 
+. recode nobasicv 0 = 0 1/max = 1
+(nobasicv: 11949 changes made)
+
+. 
+. label var nobasicv "Received no basic vaccinations"
+
+. 
+. label define nobasicvcodes 0 "No doses" 1 "At least one dose"
+
+. 
+. label values nobasicv nobasicvcodes
+
+. 
+. svy, subpop(if agevac==2): tab basicvac ethnicity, ci col obs
+(running tabulate on estimation sample)
+
+Number of strata   =        12                  Number of obs     =     33,440
+Number of PSUs     =     1,389                  Population size   = 33,707.416
+                                                Subpop. no. obs   =      6,059
+                                                Subpop. size      = 6,143.3375
+                                                Design df         =      1,377
+
+-------------------------------------------------------------------------------------------------------------------
+Received  |
+all basic |
+vaccinati |                                                Ethnicity                                               
+ons       |          Ekoi         Fulani          Hausa         Ibibio          Igala           Igbo       Ijaw/Izo
+----------+--------------------------------------------------------------------------------------------------------
+ No/Don't |         .4851          .8783          .8008          .5786          .7236          .4372          .6648
+          | [.2909,.6838]  [.8382,.9096]  [.7717,.8271]  [.4686,.6812]  [.5347,.8565]  [.3888,.4868]  [.5629,.7534]
+          |            12            494           1442             61             40            403            127
+          | 
+      Yes |         .5149          .1217          .1992          .4214          .2764          .5628          .3352
+          | [.3162,.7091]  [.0904,.1618]  [.1729,.2283]  [.3188,.5314]  [.1435,.4653]  [.5132,.6112]  [.2466,.4371]
+          |            13             74            354             44             15            444             44
+          | 
+    Total |             1              1              1              1              1              1              1
+          |                                                                                                        
+          |            25            568           1796            105             55            847            171
+-------------------------------------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------
+Received  |
+all basic |
+vaccinati |                                 Ethnicity                                
+ons       |      Kanuri/B            Tiv         Yoruba       Other/Do          Total
+----------+--------------------------------------------------------------------------
+ No/Don't |         .8558           .754          .5923           .641          .6882
+          | [.7729,.9118]  [.6552,.8317]   [.5386,.644]  [.6046,.6759]  [.6693,.7064]
+          |           125            114            365           1026           4209
+          | 
+      Yes |         .1442           .246          .4077           .359          .3118
+          | [.0882,.2271]  [.1683,.3448]   [.356,.4614]  [.3241,.3954]  [.2936,.3307]
+          |            23             34            257            548           1850
+          | 
+    Total |             1              1              1              1              1
+          |                                                                          
+          |           148            148            622           1574           6059
+-------------------------------------------------------------------------------------
+  Key:  column proportion
+        [95% confidence interval for column proportion]
+        number of observations
+
+  Pearson:
+    Uncorrected   chi2(10)        = 2920.2214
+    Design-based  F(9.17, 12624.51)=   32.9072    P = 0.0000
+
+. 
+. svy, subpop(if agevac==2): logistic basicvac i.ethnicity, base
+(running logistic on estimation sample)
+
+Survey: Logistic regression
+
+Number of strata   =        12                  Number of obs     =     33,440
+Number of PSUs     =     1,389                  Population size   = 33,707.416
+                                                Subpop. no. obs   =      6,059
+                                                Subpop. size      = 6,143.3375
+                                                Design df         =      1,377
+                                                F(  10,   1368)   =      22.76
+                                                Prob > F          =     0.0000
+
+-----------------------------------------------------------------------------------
+                  |             Linearized
+         basicvac | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+------------------+----------------------------------------------------------------
+        ethnicity |
+            Ekoi  |          1  (base)
+          Fulani  |   .1305176   .0594221    -4.47   0.000     .0534309    .3188201
+           Hausa  |    .234265   .1013433    -3.35   0.001     .1002658     .547346
+          Ibibio  |   .6861148   .3275599    -0.79   0.430     .2689459    1.750365
+           Igala  |   .3597349   .2145566    -1.71   0.087     .1116488    1.159074
+            Igbo  |   1.212801   .5294728     0.44   0.659     .5150551    2.855786
+       Ijaw/Izon  |   .4748852   .2266654    -1.56   0.119     .1861864    1.211238
+ Kanuri/Beriberi  |   .1587714   .0808906    -3.61   0.000     .0584416    .4313429
+             Tiv  |   .3074026   .1502041    -2.41   0.016     .1178758    .8016604
+          Yoruba  |   .6482839   .2840189    -0.99   0.323     .2744847    1.531131
+Other/Don't know  |   .5275056   .2274446    -1.48   0.138      .226408     1.22903
+                  |
+            _cons |   1.061619   .4497401     0.14   0.888     .4624361    2.437169
+-----------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+. 
+. test 2.ethnicity 3.ethnicity 4.ethnicity 5.ethnicity 6.ethnicity 7.ethnicity 8.ethnicity 9.ethnicity 10.ethnicity 11.
+> ethnicity
+
+Adjusted Wald test
+
+ ( 1)  [basicvac]2.ethnicity = 0
+ ( 2)  [basicvac]3.ethnicity = 0
+ ( 3)  [basicvac]4.ethnicity = 0
+ ( 4)  [basicvac]5.ethnicity = 0
+ ( 5)  [basicvac]6.ethnicity = 0
+ ( 6)  [basicvac]7.ethnicity = 0
+ ( 7)  [basicvac]8.ethnicity = 0
+ ( 8)  [basicvac]9.ethnicity = 0
+ ( 9)  [basicvac]10.ethnicity = 0
+ (10)  [basicvac]11.ethnicity = 0
+
+       F( 10,  1368) =   22.76
+            Prob > F =    0.0000
+
+. codebook
+
+-----------------------------------------------------------------------------------------------------------------------
+caseid                                                                                              case identification
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  string (str15)
+
+         unique values:  21,792                   missing "":  0/33,924
+
+              examples:  "286  22  3"
+                         "481  53  2"
+                         "665  47  2"
+                         "939  17  9"
+
+               warning:  variable has leading and embedded blanks
+
+-----------------------------------------------------------------------------------------------------------------------
+midx                                                                                             index to birth history
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+
+                 range:  [1,6]                        units:  1
+         unique values:  6                        missing .:  0/33,924
+
+            tabulation:  Freq.  Value
+                        21,792  1
+                        10,429  2
+                         1,577  3
+                           116  4
+                             8  5
+                             2  6
+
+-----------------------------------------------------------------------------------------------------------------------
+v000                                                                                             country code and phase
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  string (str3)
+
+         unique values:  1                        missing "":  0/33,924
+
+            tabulation:  Freq.  Value
+                        33,924  "NG7"
+
+-----------------------------------------------------------------------------------------------------------------------
+v001                                                                                                     cluster number
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (int)
+
+                 range:  [1,1400]                     units:  1
+         unique values:  1,389                    missing .:  0/33,924
+
+                  mean:   612.956
+              std. dev:   358.907
+
+           percentiles:        10%       25%       50%       75%       90%
+                               158       334       579     848.5      1172
+
+-----------------------------------------------------------------------------------------------------------------------
+v002                                                                                                   household number
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (int)
+
+                 range:  [1,274]                      units:  1
+         unique values:  207                      missing .:  0/33,924
+
+                  mean:   31.0563
+              std. dev:    24.878
+
+           percentiles:        10%       25%       50%       75%       90%
+                                 6        14        26        41        60
+
+-----------------------------------------------------------------------------------------------------------------------
+v003                                                                                           respondent's line number
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+
+                 range:  [1,26]                       units:  1
+         unique values:  25                       missing .:  0/33,924
+
+                  mean:   2.77211
+              std. dev:   2.23091
+
+           percentiles:        10%       25%       50%       75%       90%
+                                 2         2         2         2         5
+
+-----------------------------------------------------------------------------------------------------------------------
+v004                                                                                                 ultimate area unit
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (int)
+
+                 range:  [1,1400]                     units:  1
+         unique values:  1,389                    missing .:  0/33,924
+
+                  mean:   612.956
+              std. dev:   358.907
+
+           percentiles:        10%       25%       50%       75%       90%
+                               158       334       579     848.5      1172
+
+-----------------------------------------------------------------------------------------------------------------------
+v005                                                                      women's individual sample weight (6 decimals)
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (long)
+
+                 range:  [103280,13411626]            units:  1
+         unique values:  1,367                    missing .:  0/33,924
+
+                  mean:   1.0e+06
+              std. dev:    646460
+
+           percentiles:        10%       25%       50%       75%       90%
+                            434753    612943    884697   1.2e+06   1.7e+06
+
+-----------------------------------------------------------------------------------------------------------------------
+v006                                                                                                 month of interview
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+
+                 range:  [8,12]                       units:  1
+         unique values:  5                        missing .:  0/33,924
+
+            tabulation:  Freq.  Value
+                         2,458  8
+                         9,539  9
+                         8,420  10
+                         7,662  11
+                         5,845  12
+
+-----------------------------------------------------------------------------------------------------------------------
+v007                                                                                                  year of interview
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (int)
+
+                 range:  [2018,2018]                  units:  1
+         unique values:  1                        missing .:  0/33,924
+
+            tabulation:  Freq.  Value
+                        33,924  2018
+
+-----------------------------------------------------------------------------------------------------------------------
+v008                                                                                            date of interview (cmc)
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (int)
+
+                 range:  [1424,1428]                  units:  1
+         unique values:  5                        missing .:  0/33,924
+
+            tabulation:  Freq.  Value
+                         2,458  1424
+                         9,539  1425
+                         8,420  1426
+                         7,662  1427
+                         5,845  1428
+
+-----------------------------------------------------------------------------------------------------------------------
+v008a                                                                          date of interview century day code (cdc)
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (long)
+
+                 range:  [43327,43465]                units:  1
+         unique values:  134                      missing .:  0/33,924
+
+                  mean:   43393.1
+              std. dev:     35.75
+
+           percentiles:        10%       25%       50%       75%       90%
+                             43347     43362     43391     43428     43442
+
+-----------------------------------------------------------------------------------------------------------------------
+v009                                                                                        respondent's month of birth
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+
+                 range:  [1,12]                       units:  1
+         unique values:  12                       missing .:  0/33,924
+
+                  mean:   5.54917
+              std. dev:   3.19874
+
+           percentiles:        10%       25%       50%       75%       90%
+                                 2         3         5         8        10
+
+-----------------------------------------------------------------------------------------------------------------------
+v010                                                                                         respondent's year of birth
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (int)
+
+                 range:  [1968,2003]                  units:  1
+         unique values:  36                       missing .:  0/33,924
+
+                  mean:   1988.36
+              std. dev:   6.82633
+
+           percentiles:        10%       25%       50%       75%       90%
+                              1979      1983      1989      1993      1997
+
+-----------------------------------------------------------------------------------------------------------------------
+v011                                                                                                date of birth (cmc)
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (int)
+
+                 range:  [827,1246]                   units:  1
+         unique values:  420                      missing .:  0/33,924
+
+                  mean:   1065.84
+              std. dev:   81.8793
+
+           percentiles:        10%       25%       50%       75%       90%
+                               950      1004    1071.5      1124      1170
+
+-----------------------------------------------------------------------------------------------------------------------
+v012                                                                                           respondent's current age
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+
+                 range:  [15,49]                      units:  1
+         unique values:  35                       missing .:  0/33,924
+
+                  mean:    29.552
+              std. dev:   6.81914
+
+           percentiles:        10%       25%       50%       75%       90%
+                                21        25        29        35        39
+
+-----------------------------------------------------------------------------------------------------------------------
+v013                                                                                               age in 5-year groups
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V013
+
+                 range:  [1,7]                        units:  1
+         unique values:  7                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                         1,434         1  15-19
+                         6,626         2  20-24
+                         9,470         3  25-29
+                         7,647         4  30-34
+                         5,447         5  35-39
+                         2,407         6  40-44
+                           893         7  45-49
+
+-----------------------------------------------------------------------------------------------------------------------
+v014                                                                                    completeness of age information
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V014
+
+                 range:  [1,6]                        units:  1
+         unique values:  4                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                        32,795         1  month and year - information
+                                          complete
+                            17         2  month and age - year imputed
+                         1,011         3  year and age - month imputed
+                           101         6  age - year/month imputed
+
+-----------------------------------------------------------------------------------------------------------------------
+v015                                                                                     result of individual interview
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V015
+
+                 range:  [1,1]                        units:  1
+         unique values:  1                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                        33,924         1  completed
+
+-----------------------------------------------------------------------------------------------------------------------
+v016                                                                                                   day of interview
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+
+                 range:  [1,31]                       units:  1
+         unique values:  31                       missing .:  0/33,924
+
+                  mean:   15.4534
+              std. dev:   8.91363
+
+           percentiles:        10%       25%       50%       75%       90%
+                                 3         8        15        23        28
+
+-----------------------------------------------------------------------------------------------------------------------
+v017                                                                                              cmc start of calendar
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (int)
+
+                 range:  [1357,1357]                  units:  1
+         unique values:  1                        missing .:  0/33,924
+
+            tabulation:  Freq.  Value
+                        33,924  1357
+
+-----------------------------------------------------------------------------------------------------------------------
+v018                                                                                          row of month of interview
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V018, but 5 nonmissing values are not labeled
+
+                 range:  [9,13]                       units:  1
+         unique values:  5                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                         5,845         9  
+                         7,662        10  
+                         8,420        11  
+                         9,539        12  
+                         2,458        13  
+
+-----------------------------------------------------------------------------------------------------------------------
+v019                                                                                                 length of calendar
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V019, but 5 nonmissing values are not labeled
+
+                 range:  [68,72]                      units:  1
+         unique values:  5                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                         2,458        68  
+                         9,539        69  
+                         8,420        70  
+                         7,662        71  
+                         5,845        72  
+
+-----------------------------------------------------------------------------------------------------------------------
+v019a                                                                                        number of calendar columns
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V019A, but 1 nonmissing value is not labeled
+
+                 range:  [2,2]                        units:  1
+         unique values:  1                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                        33,924         2  
+
+-----------------------------------------------------------------------------------------------------------------------
+v020                                                                                                ever-married sample
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V020
+
+                 range:  [0,0]                        units:  1
+         unique values:  1                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                        33,924         0  all woman sample
+
+-----------------------------------------------------------------------------------------------------------------------
+v021                                                                                              primary sampling unit
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (int)
+
+                 range:  [1,1400]                     units:  1
+         unique values:  1,389                    missing .:  0/33,924
+
+                  mean:   612.956
+              std. dev:   358.907
+
+           percentiles:        10%       25%       50%       75%       90%
+                               158       334       579     848.5      1172
+
+-----------------------------------------------------------------------------------------------------------------------
+v022                                                                                  sample strata for sampling errors
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V022
+
+                 range:  [1,74]                       units:  1
+         unique values:  74                       missing .:  0/33,924
+
+              examples:  16    ne adamawa rural
+                         28    nw jigawa rural
+                         36    nw kebbi rural
+                         50    se imo rural
+
+-----------------------------------------------------------------------------------------------------------------------
+v023                                                                               stratification used in sample design
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V023
+
+                 range:  [1,74]                       units:  1
+         unique values:  74                       missing .:  0/33,924
+
+              examples:  16    ne adamawa rural
+                         28    nw jigawa rural
+                         36    nw kebbi rural
+                         50    se imo rural
+
+-----------------------------------------------------------------------------------------------------------------------
+v024                                                                                                             region
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V024
+
+                 range:  [1,6]                        units:  1
+         unique values:  6                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                         5,875         1  north central
+                         7,211         2  north east
+                        10,305         3  north west
+                         3,798         4  south east
+                         3,202         5  south south
+                         3,533         6  south west
+
+-----------------------------------------------------------------------------------------------------------------------
+v025                                                                                         type of place of residence
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V025
+
+                 range:  [1,2]                        units:  1
+         unique values:  2                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                        11,699         1  urban
+                        22,225         2  rural
+
+-----------------------------------------------------------------------------------------------------------------------
+v026                                                                                   na - de facto place of residence
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V026
+
+                 range:  [.,.]                        units:  .
+         unique values:  0                        missing .:  33,924/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                        33,924         .  
+
+-----------------------------------------------------------------------------------------------------------------------
+v027                                                                                                   number of visits
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+
+                 range:  [1,5]                        units:  1
+         unique values:  5                        missing .:  0/33,924
+
+            tabulation:  Freq.  Value
+                        24,847  1
+                         6,735  2
+                         1,684  3
+                           418  4
+                           240  5
+
+-----------------------------------------------------------------------------------------------------------------------
+v028                                                                                         interviewer identification
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (int)
+
+                 range:  [102,3707]                   units:  1
+         unique values:  116                      missing .:  0/33,924
+
+                  mean:   1977.53
+              std. dev:   1048.35
+
+           percentiles:        10%       25%       50%       75%       90%
+                               505      1105      2003      2805      3502
+
+-----------------------------------------------------------------------------------------------------------------------
+v029                                                                                          na - keyer identification
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+
+                 range:  [.,.]                        units:  .
+         unique values:  0                        missing .:  33,924/33,924
+
+            tabulation:  Freq.  Value
+                        33,924  .
+
+-----------------------------------------------------------------------------------------------------------------------
+v030                                                                                                   field supervisor
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (int)
+
+                 range:  [101,3701]                   units:  1
+         unique values:  37                       missing .:  0/33,924
+
+                  mean:   1974.41
+              std. dev:   1048.42
+
+           percentiles:        10%       25%       50%       75%       90%
+                               501      1101      2001      2801      3501
+
+-----------------------------------------------------------------------------------------------------------------------
+v031                                                                                                  na - field editor
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+
+                 range:  [.,.]                        units:  .
+         unique values:  0                        missing .:  33,924/33,924
+
+            tabulation:  Freq.  Value
+                        33,924  .
+
+-----------------------------------------------------------------------------------------------------------------------
+v032                                                                                                 na - office editor
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+
+                 range:  [.,.]                        units:  .
+         unique values:  0                        missing .:  33,924/33,924
+
+            tabulation:  Freq.  Value
+                        33,924  .
+
+-----------------------------------------------------------------------------------------------------------------------
+v034                                                                                             line number of husband
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V034, but 18 nonmissing values are not labeled
+
+                 range:  [0,22]                       units:  1
+         unique values:  19                       missing .:  1,698/33,924
+
+              examples:  1     
+                         1     
+                         1     
+                         1     
+
+-----------------------------------------------------------------------------------------------------------------------
+v040                                                                                         cluster altitude in meters
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (int)
+
+                 range:  [0,1572]                     units:  1
+         unique values:  586                      missing .:  0/33,924
+
+                  mean:   317.754
+              std. dev:   231.417
+
+           percentiles:        10%       25%       50%       75%       90%
+                                41       147       308       445       578
+
+-----------------------------------------------------------------------------------------------------------------------
+v042                                                                                  household selected for hemoglobin
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V042
+
+                 range:  [0,1]                        units:  1
+         unique values:  2                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                        20,400         0  not selected
+                        13,524         1  selected
+
+-----------------------------------------------------------------------------------------------------------------------
+v044                                                                              selected for domestic violence module
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V044
+
+                 range:  [0,2]                        units:  1
+         unique values:  3                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                        23,180         0  woman not selected
+                        10,594         1  woman selected and interviewed
+                           150         2  woman selected, but privacy not
+                                          possible
+
+-----------------------------------------------------------------------------------------------------------------------
+v045a                                                                                         language of questionnaire
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V045A
+
+                 range:  [1,4]                        units:  1
+         unique values:  4                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                         9,620         1  english
+                        18,140         2  hausa
+                         3,101         3  yoruba
+                         3,063         4  igbo
+
+-----------------------------------------------------------------------------------------------------------------------
+v045b                                                                                             language of interview
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V045B
+
+                 range:  [1,4]                        units:  1
+         unique values:  4                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                         8,087         1  english
+                        19,170         2  hausa
+                         3,238         3  yoruba
+                         3,429         4  igbo
+
+-----------------------------------------------------------------------------------------------------------------------
+v045c                                                                                     native language of respondent
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V045C
+
+                 range:  [1,9]                        units:  1
+         unique values:  5                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                         1,326         1  english
+                        14,362         2  hausa
+                         3,403         3  yoruba
+                         4,131         4  igbo
+                        10,702         9  other
+
+-----------------------------------------------------------------------------------------------------------------------
+v046                                                                                                    translator used
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V046
+
+                 range:  [0,1]                        units:  1
+         unique values:  2                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                        31,353         0  no
+                         2,571         1  yes
+
+-----------------------------------------------------------------------------------------------------------------------
+regiondf                                                                                                         region
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V101
+
+                 range:  [1,6]                        units:  1
+         unique values:  6                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                         5,875         1  north central
+                         7,211         2  north east
+                        10,305         3  north west
+                         3,798         4  south east
+                         3,202         5  south south
+                         3,533         6  south west
+
+-----------------------------------------------------------------------------------------------------------------------
+urbrurdf                                                                                     type of place of residence
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V102
+
+                 range:  [1,2]                        units:  1
+         unique values:  2                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                        11,699         1  urban
+                        22,225         2  rural
+
+-----------------------------------------------------------------------------------------------------------------------
+v103                                                                                  na - childhood place of residence
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V103
+
+                 range:  [.,.]                        units:  .
+         unique values:  0                        missing .:  33,924/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                        33,924         .  
+
+-----------------------------------------------------------------------------------------------------------------------
+v104                                                                                  years lived in place of residence
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V104, but 47 nonmissing values are not labeled
+
+                 range:  [0,96]                       units:  1
+         unique values:  49                       missing .:  0/33,924
+
+              examples:  6     
+                         19    
+                         95    always
+                         95    always
+
+-----------------------------------------------------------------------------------------------------------------------
+v105                                                                                type of place of previous residence
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V105
+
+                 range:  [1,3]                        units:  1
+         unique values:  3                        missing .:  18,482/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                         2,515         1  city
+                         4,928         2  town
+                         7,999         3  countryside
+                        18,482         .  
+
+-----------------------------------------------------------------------------------------------------------------------
+v105a                                                                                      region of previous residence
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V105A
+
+                 range:  [1,96]                       units:  1
+         unique values:  38                       missing .:  18,482/33,924
+
+              examples:  15    nasarawa
+                         32    imo
+                         .     
+                         .     
+
+-----------------------------------------------------------------------------------------------------------------------
+v106                                                                                          highest educational level
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V106
+
+                 range:  [0,3]                        units:  1
+         unique values:  4                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                        15,391         0  no education
+                         5,274         1  primary
+                        10,623         2  secondary
+                         2,636         3  higher
+
+-----------------------------------------------------------------------------------------------------------------------
+v107                                                                                          highest year of education
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V107, but 8 nonmissing values are not labeled
+
+                 range:  [0,8]                        units:  1
+         unique values:  9                        missing .:  15,391/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                            41         0  no years completed at level v106
+                           416         1  
+                         1,576         2  
+                         2,977         3  
+                         1,780         4  
+                         1,355         5  
+                        10,384         6  
+                             1         7  
+                             3         8  
+                        15,391         .  
+
+-----------------------------------------------------------------------------------------------------------------------
+v113                                                                                           source of drinking water
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V113
+
+                 range:  [11,97]                      units:  1
+         unique values:  17                       missing .:  0/33,924
+
+              examples:  21    tube well or borehole
+                         21    tube well or borehole
+                         32    unprotected well
+                         43    river/dam/lake/ponds/stream/canal/irrigation channel
+
+-----------------------------------------------------------------------------------------------------------------------
+v115                                                                                        time to get to water source
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (int)
+                 label:  V115, but 84 nonmissing values are not labeled
+
+                 range:  [0,998]                      units:  1
+         unique values:  87                       missing .:  0/33,924
+
+              examples:  10    
+                         15    
+                         30    
+                         996   on premises
+
+-----------------------------------------------------------------------------------------------------------------------
+v116                                                                                            type of toilet facility
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V116
+
+                 range:  [11,97]                      units:  1
+         unique values:  14                       missing .:  0/33,924
+
+              examples:  21    ventilated improved pit latrine (vip)
+                         22    pit latrine with slab
+                         23    pit latrine without slab/open pit
+                         31    no facility/bush/field
+
+-----------------------------------------------------------------------------------------------------------------------
+v119                                                                                         household has: electricity
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V119
+
+                 range:  [0,7]                        units:  1
+         unique values:  3                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                        17,235         0  no
+                        16,245         1  yes
+                           444         7  not a dejure resident
+
+-----------------------------------------------------------------------------------------------------------------------
+v120                                                                                               household has: radio
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V120
+
+                 range:  [0,7]                        units:  1
+         unique values:  3                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                        14,638         0  no
+                        18,842         1  yes
+                           444         7  not a dejure resident
+
+-----------------------------------------------------------------------------------------------------------------------
+v121                                                                                          household has: television
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V121
+
+                 range:  [0,7]                        units:  1
+         unique values:  3                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                        19,429         0  no
+                        14,051         1  yes
+                           444         7  not a dejure resident
+
+-----------------------------------------------------------------------------------------------------------------------
+v122                                                                                        household has: refrigerator
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V122
+
+                 range:  [0,7]                        units:  1
+         unique values:  3                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                        27,708         0  no
+                         5,772         1  yes
+                           444         7  not a dejure resident
+
+-----------------------------------------------------------------------------------------------------------------------
+v123                                                                                             household has: bicycle
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V123
+
+                 range:  [0,7]                        units:  1
+         unique values:  3                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                        28,063         0  no
+                         5,417         1  yes
+                           444         7  not a dejure resident
+
+-----------------------------------------------------------------------------------------------------------------------
+v124                                                                                  household has: motorcycle/scooter
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V124
+
+                 range:  [0,7]                        units:  1
+         unique values:  3                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                        21,224         0  no
+                        12,256         1  yes
+                           444         7  not a dejure resident
+
+-----------------------------------------------------------------------------------------------------------------------
+v125                                                                                           household has: car/truck
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V125
+
+                 range:  [0,7]                        units:  1
+         unique values:  3                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                        30,396         0  no
+                         3,084         1  yes
+                           444         7  not a dejure resident
+
+-----------------------------------------------------------------------------------------------------------------------
+v127                                                                                                main floor material
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V127
+
+                 range:  [11,97]                      units:  1
+         unique values:  11                       missing .:  0/33,924
+
+              examples:  11    earth/sand
+                         33    ceramic tiles
+                         34    cement
+                         34    cement
+
+-----------------------------------------------------------------------------------------------------------------------
+v128                                                                                                 main wall material
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V128
+
+                 range:  [11,97]                      units:  1
+         unique values:  16                       missing .:  0/33,924
+
+              examples:  21    bamboo with mud
+                         23    uncovered adobe
+                         31    cement
+                         33    bricks
+
+-----------------------------------------------------------------------------------------------------------------------
+v129                                                                                                 main roof material
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V129
+
+                 range:  [11,97]                      units:  1
+         unique values:  15                       missing .:  0/33,924
+
+              examples:  31    metal/zinc
+                         31    metal/zinc
+                         31    metal/zinc
+                         31    metal/zinc
+
+-----------------------------------------------------------------------------------------------------------------------
+religion                                                                                                       religion
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V130
+
+                 range:  [1,96]                       units:  1
+         unique values:  5                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                         2,913         1  catholic
+                        10,326         2  other christian
+                        20,412         3  islam
+                           116         4  traditionalist
+                           157        96  other
+
+-----------------------------------------------------------------------------------------------------------------------
+v131                                                                                                          ethnicity
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V131
+
+                 range:  [1,98]                       units:  1
+         unique values:  12                       missing .:  0/33,924
+
+              examples:  3     hausa
+                         3     hausa
+                         7     ijaw/izon
+                         96    other
+
+-----------------------------------------------------------------------------------------------------------------------
+v133                                                                                          education in single years
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V133, but 21 nonmissing values are not labeled
+
+                 range:  [0,20]                       units:  1
+         unique values:  21                       missing .:  0/33,924
+
+              examples:  0     
+                         0     
+                         6     
+                         12    
+
+-----------------------------------------------------------------------------------------------------------------------
+v134                                                                                   na - de facto place of residence
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V134
+
+                 range:  [.,.]                        units:  .
+         unique values:  0                        missing .:  33,924/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                        33,924         .  
+
+-----------------------------------------------------------------------------------------------------------------------
+v135                                                                                          usual resident or visitor
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V135
+
+                 range:  [1,2]                        units:  1
+--Break--
+r(1);
+
+. codebook religion
+
+-----------------------------------------------------------------------------------------------------------------------
+religion                                                                                                       religion
+-----------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (byte)
+                 label:  V130
+
+                 range:  [1,96]                       units:  1
+         unique values:  5                        missing .:  0/33,924
+
+            tabulation:  Freq.   Numeric  Label
+                         2,913         1  catholic
+                        10,326         2  other christian
+                        20,412         3  islam
+                           116         4  traditionalist
+                           157        96  other
+
+. svy, subpop(if agevac==2): tab basicvac matage, ci col obs
+(running tabulate on estimation sample)
+
+Number of strata   =        12                  Number of obs     =     33,440
+Number of PSUs     =     1,389                  Population size   = 33,707.416
+                                                Subpop. no. obs   =      6,059
+                                                Subpop. size      = 6,143.3375
+                                                Design df         =      1,377
+
+----------------------------------------------------------------------
+Received  |
+all basic |
+vaccinati |                      Maternal age now                     
+ons       |       15 - 19        20 - 34        35 - 49          Total
+----------+-----------------------------------------------------------
+ No/Don't |         .8416          .6863          .6551          .6882
+          | [.7914,.8815]   [.665,.7069]  [.6137,.6943]  [.6693,.7064]
+          |           305           2981            923           4209
+          | 
+      Yes |         .1584          .3137          .3449          .3118
+          | [.1185,.2086]   [.2931,.335]  [.3057,.3863]  [.2936,.3307]
+          |            61           1349            440           1850
+          | 
+    Total |             1              1              1              1
+          |                                                           
+          |           366           4330           1363           6059
+----------------------------------------------------------------------
+  Key:  column proportion
+        [95% confidence interval for column proportion]
+        number of observations
+
+  Pearson:
+    Uncorrected   chi2(2)         =  252.3226
+    Design-based  F(1.86, 2557.32)=   12.1139     P = 0.0000
+
+. 
+. svy, subpop(if agevac==2): logistic basicvac i.religion, base
+(running logistic on estimation sample)
+
+Survey: Logistic regression
+
+Number of strata   =        12                  Number of obs     =     33,440
+Number of PSUs     =     1,389                  Population size   = 33,707.416
+                                                Subpop. no. obs   =      6,059
+                                                Subpop. size      = 6,143.3375
+                                                Design df         =      1,377
+                                                F(   4,   1374)   =      41.88
+                                                Prob > F          =     0.0000
+
+----------------------------------------------------------------------------------
+                 |             Linearized
+        basicvac | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-----------------+----------------------------------------------------------------
+        religion |
+       catholic  |          1  (base)
+other christian  |   .8240939   .0996579    -1.60   0.110      .650055    1.044728
+          islam  |   .3058203   .0396032    -9.15   0.000      .237214    .3942688
+ traditionalist  |   .2985688   .2310646    -1.56   0.119     .0654205    1.362621
+          other  |   .1710799   .0749706    -4.03   0.000     .0724199     .404148
+                 |
+           _cons |   .9530893   .1084963    -0.42   0.673     .7623434    1.191562
+----------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+. 
+. test 2.religion 3.religion 4.religion 96.religion
+
+Adjusted Wald test
+
+ ( 1)  [basicvac]2.religion = 0
+ ( 2)  [basicvac]3.religion = 0
+ ( 3)  [basicvac]4.religion = 0
+ ( 4)  [basicvac]96.religion = 0
+
+       F(  4,  1374) =   41.88
+            Prob > F =    0.0000
+
+. svy, subpop(if agevac==2): tab basicvac religion, ci col obs
+(running tabulate on estimation sample)
+
+Number of strata   =        12                  Number of obs     =     33,440
+Number of PSUs     =     1,389                  Population size   = 33,707.416
+                                                Subpop. no. obs   =      6,059
+                                                Subpop. size      = 6,143.3375
+                                                Design df         =      1,377
+
+----------------------------------------------------------------------------------------------------
+Received  |
+all basic |
+vaccinati |                                         religion                                        
+ons       |      catholic       other ch          islam       traditio          other          Total
+----------+-----------------------------------------------------------------------------------------
+ No/Don't |          .512          .5601          .7743          .7785          .8598          .6882
+          | [.4563,.5674]  [.5293,.5904]  [.7525,.7947]   [.437,.9409]  [.7269,.9339]  [.6693,.7064]
+          |           311           1107           2746             12             33           4209
+          | 
+      Yes |          .488          .4399          .2257          .2215          .1402          .3118
+          | [.4326,.5437]  [.4096,.4707]  [.2053,.2475]   [.0591,.563]  [.0661,.2731]  [.2936,.3307]
+          |           275            776            792              3              4           1850
+          | 
+    Total |             1              1              1              1              1              1
+          |                                                                                         
+          |           586           1883           3538             15             37           6059
+----------------------------------------------------------------------------------------------------
+  Key:  column proportion
+        [95% confidence interval for column proportion]
+        number of observations
+
+  Pearson:
+    Uncorrected   chi2(4)         = 1915.2734
+    Design-based  F(3.25, 4469.06)=   63.7226     P = 0.0000
+
+. help conindex
+
+. gen basicvac2 = basicvac if agevac==2
+(27,865 missing values generated)
+
+. 
+. gen polioall2 = polioall if agevac==2
+(27,865 missing values generated)
+
+. 
+. gen dptall2 = dptall if agevac==2
+(27,865 missing values generated)
+
+. 
+. gen measles1age = measles1 if agevac==2
+(27,865 missing values generated)
+
+. 
+. gen bcg2 = bcg if agevac==2
+(27,865 missing values generated)
+
+. 
+. gen healthcard2 = healthcard if agevac==2
+(27,865 missing values generated)
+
+. svyset v021 [pweight=weight], strata(strata)single(cen)
+
+      pweight: weight
+          VCE: linearized
+  Single unit: centered
+     Strata 1: strata
+         SU 1: v021
+        FPC 1: <zero>
+
+. 
+. conindex basicvac2, rankvar(edulevel) limits(0 1) bounded erreyger graph svy
+Graph option only available for ratio-scale variables - please also specify the truezero option if the variable is rati
+> o-scale or the bounded option if the variable is bounded.
+r(498);
+
+. svyset v021 [pweight=weight], strata(strata)single(cen)
+
+      pweight: weight
+          VCE: linearized
+  Single unit: centered
+     Strata 1: strata
+         SU 1: v021
+        FPC 1: <zero>
+
+. 
+. conindex basicvac2, rankvar(wealthindexur) truezero svy graph ytitle(Cumulative percentage of children with basic vac
+> cination) xtitle(Cumulative percentage of children by household wealth)
+------------------------------------------------------------------------------+
+Index:             | No. of obs. | Index value | Std. error        | p-value  |
+-------------------+-------------+-------------+-------------------+----------|
+CI                 | 6059        | .19461281   |.01538625          |  0.0000  |
+------------------------------------------------------------------------------+
+
+. svyset v021 [pweight=weight], strata(strata)single(cen)
+
+      pweight: weight
+          VCE: linearized
+  Single unit: centered
+     Strata 1: strata
+         SU 1: v021
+        FPC 1: <zero>
+
+. conindex basicvac2, rankvar(edulevel) truezero svy graph ytitle(Cumulative percentage of children with basic vaccinat
+> ion) xtitle(Cumulative percentage of children by household wealth)
+------------------------------------------------------------------------------+
+Index:             | No. of obs. | Index value | Std. error        | p-value  |
+-------------------+-------------+-------------+-------------------+----------|
+CI                 | 6059        | .25517286   |.01332363          |  0.0000  |
+------------------------------------------------------------------------------+
+
+. svyset v021 [pweight=weight], strata(strata)single(cen)
+
+      pweight: weight
+          VCE: linearized
+  Single unit: centered
+     Strata 1: strata
+         SU 1: v021
+        FPC 1: <zero>
+
+. conindex basicvac2, rankvar(wealthindexur) truezero svy graph ytitle(Cumulative percentage of children with basic vac
+> cination) xtitle(Cumulative percentage of children by household wealth) yscale(range (0 100))
+option yscale() not allowed
+r(198);
+
+. svyset v021 [pweight=weight], strata(strata)single(cen)
+
+      pweight: weight
+          VCE: linearized
+  Single unit: centered
+     Strata 1: strata
+         SU 1: v021
+        FPC 1: <zero>
+
+. conindex basicvac2, rankvar(wealthindexur) truezero svy graph ytitle(Cumulative percentage of children with basic vac
+> cination) xtitle(Cumulative percentage of children by household wealth)
+------------------------------------------------------------------------------+
+Index:             | No. of obs. | Index value | Std. error        | p-value  |
+-------------------+-------------+-------------+-------------------+----------|
+CI                 | 6059        | .19461281   |.01538625          |  0.0000  |
+------------------------------------------------------------------------------+
+
+. graph save "Graph" "C:\Users\willi\Documents\Masters\Project\Concentration curve v1.gph"
+(file C:\Users\willi\Documents\Masters\Project\Concentration curve v1.gph saved)
+svy, subpop(if agevac==2): logistic basicvac i.regiondf i.matage i.edulevel i.wealthindexur i.sexhh i.childsex i.bthord
+> er i.delivery i.anc i.ethnicity i.religion
+(running logistic on estimation sample)
+
+Survey: Logistic regression
+
+Number of strata   =        12                  Number of obs     =     33,205
+Number of PSUs     =     1,389                  Population size   = 33,470.335
+                                                Subpop. no. obs   =      5,824
+                                                Subpop. size      = 5,906.2557
+                                                Design df         =      1,377
+                                                F(  36,   1342)   =      14.89
+                                                Prob > F          =     0.0000
+
+---------------------------------------------------------------------------------------------
+                            |             Linearized
+                   basicvac | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+----------------------------+----------------------------------------------------------------
+                   regiondf |
+                north east  |   1.042618   .1822597     0.24   0.811     .7399388     1.46911
+                north west  |    1.01326   .1941654     0.07   0.945     .6957714    1.475623
+                south east  |   1.305865   .3489335     1.00   0.318     .7731307    2.205686
+               south south  |   .8775897   .1751621    -0.65   0.513     .5932626    1.298184
+                south west  |   .9929013   .2001246    -0.04   0.972     .6686377     1.47442
+                            |
+                     matage |
+             20 - 34 years  |   1.892737   .3719861     3.25   0.001     1.287222    2.783088
+             35 - 49 years  |   2.634101   .5939186     4.30   0.000     1.692547    4.099437
+                            |
+                   edulevel |
+         Primary education  |    1.56127   .2191635     3.17   0.002     1.185456    2.056226
+       Secondary or higher  |   2.113383   .2591593     6.10   0.000      1.66152    2.688134
+                            |
+              wealthindexur |
+                    poorer  |   1.346694   .1789716     2.24   0.025     1.037642    1.747796
+                    middle  |   1.423892   .1961557     2.57   0.010     1.086706      1.8657
+                    richer  |   1.703311   .2496654     3.63   0.000     1.277668    2.270753
+                   richest  |   1.962448   .2900171     4.56   0.000     1.468568     2.62242
+                            |
+                      sexhh |
+                    female  |   1.050997   .1251646     0.42   0.676     .8320349    1.327582
+                            |
+                   childsex |
+                    female  |    1.01479   .0804984     0.19   0.853       .86855    1.185652
+                            |
+                   bthorder |
+            2nd - 3rd born  |   .8985309    .102555    -0.94   0.349     .7182813    1.124013
+            4th - 5th born  |   .9780145   .1222642    -0.18   0.859     .7653159    1.249827
+        6th born or higher  |   .8196603   .1159052    -1.41   0.160     .6211015    1.081696
+                            |
+                   delivery |
+Public or private facility  |   1.428017   .1435429     3.54   0.000     1.172455    1.739285
+                     Other  |   .8005938   .2767974    -0.64   0.520     .4063112    1.577486
+                            |
+                        anc |
+              1 - 3 visits  |   2.112077   .3059481     5.16   0.000     1.589641    2.806211
+          4 or more visits  |   2.880553   .3848624     7.92   0.000     2.216406    3.743713
+                            |
+                  ethnicity |
+                    Fulani  |   .3335291   .1729997    -2.12   0.034      .120568     .922647
+                     Hausa  |    .471164    .238573    -1.49   0.137     .1744973      1.2722
+                    Ibibio  |   .8454551   .4300427    -0.33   0.741     .3117052    2.293175
+                     Igala  |   .3478283   .2221718    -1.65   0.098     .0993551    1.217698
+                      Igbo  |   .7240193    .368018    -0.64   0.525     .2671191    1.962436
+                 Ijaw/Izon  |   .7159378    .360755    -0.66   0.507      .266431    1.923826
+           Kanuri/Beriberi  |    .298491   .1876081    -1.92   0.055     .0869885    1.024237
+                       Tiv  |   .3306398   .1839203    -1.99   0.047     .1110331    .9845948
+                    Yoruba  |   .4682865    .239047    -1.49   0.137     .1720343    1.274701
+          Other/Don't know  |   .6282179   .2992857    -0.98   0.329     .2467388    1.599496
+                            |
+                   religion |
+           other christian  |   .9388585    .120599    -0.49   0.623     .7297343    1.207913
+                     islam  |   .9928602   .1807082    -0.04   0.969     .6947469    1.418893
+            traditionalist  |   .8425271   .5736878    -0.25   0.801     .2215541    3.203967
+                     other  |   .2368363   .1066874    -3.20   0.001     .0978748    .5730936
+                            |
+                      _cons |    .076128   .0428059    -4.58   0.000      .025264     .229396
+---------------------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+. svy, subpop(if agevac==2): logistic basicvac i.regiondf i.matage i.edulevel i.urbrurdf##i.wealthindexur i.sexhh i.chi
+> ldsex i.bthorder i.delivery i.anc i.ethnicity i.religion
+(running logistic on estimation sample)
+
+Survey: Logistic regression
+
+Number of strata   =        12                  Number of obs     =     33,205
+Number of PSUs     =     1,389                  Population size   = 33,470.335
+                                                Subpop. no. obs   =      5,824
+                                                Subpop. size      = 5,906.2557
+                                                Design df         =      1,377
+                                                F(  41,   1337)   =      13.55
+                                                Prob > F          =     0.0000
+
+---------------------------------------------------------------------------------------------
+                            |             Linearized
+                   basicvac | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+----------------------------+----------------------------------------------------------------
+                   regiondf |
+                north east  |   1.064602   .1889884     0.35   0.724     .7515347    1.508085
+                north west  |   .9999691   .2021843    -0.00   1.000     .6725589    1.486767
+                south east  |   1.351817   .3801559     1.07   0.284     .7786345     2.34694
+               south south  |   .8555414   .1733141    -0.77   0.441     .5749822    1.272998
+                south west  |   .8284993   .1691533    -0.92   0.357      .555074    1.236612
+                            |
+                     matage |
+             20 - 34 years  |   1.686817    .328825     2.68   0.007     1.150775    2.472553
+             35 - 49 years  |   2.252897   .5010165     3.65   0.000     1.456392    3.485015
+                            |
+                   edulevel |
+         Primary education  |   1.505898   .2126577     2.90   0.004     1.141527    1.986575
+       Secondary or higher  |   1.789589   .2337702     4.46   0.000     1.385048    2.312287
+                            |
+                   urbrurdf |
+                     rural  |   .8754689   .1995537    -0.58   0.560     .5598192    1.369095
+                            |
+              wealthindexur |
+                    poorer  |   1.383073   .2610274     1.72   0.086     .9551171    2.002782
+                    middle  |   1.725822   .3382352     2.78   0.005     1.174969    2.534927
+                    richer  |   3.103718   .6698472     5.25   0.000      2.03242    4.739701
+                   richest  |   3.212402   .7240043     5.18   0.000      2.06452    4.998511
+                            |
+     urbrurdf#wealthindexur |
+              rural#poorer  |   1.003363   .2581765     0.01   0.990     .6056783    1.662166
+              rural#middle  |   .7841059   .2117364    -0.90   0.368     .4616553    1.331777
+              rural#richer  |   .4120761   .1197491    -3.05   0.002     .2330243    .7287083
+             rural#richest  |   .5696983   .1648864    -1.94   0.052     .3228992    1.005132
+                            |
+                      sexhh |
+                    female  |   1.088939   .1294177     0.72   0.474     .8624844    1.374851
+                            |
+                   childsex |
+                    female  |   1.023517   .0798399     0.30   0.766     .8782903    1.192756
+                            |
+                   bthorder |
+            2nd - 3rd born  |   .9104449   .1051639    -0.81   0.417     .7258492    1.141986
+            4th - 5th born  |   1.014468   .1274477     0.11   0.909     .7928809    1.297983
+        6th born or higher  |   .8608859   .1223376    -1.05   0.292      .651445    1.137662
+                            |
+                   delivery |
+Public or private facility  |   1.320367   .1330413     2.76   0.006     1.083556    1.608933
+                     Other  |   .7719537   .2608897    -0.77   0.444      .397801    1.498017
+                            |
+                        anc |
+              1 - 3 visits  |   2.150594   .3083433     5.34   0.000      1.62334    2.849099
+          4 or more visits  |   2.869865   .3804089     7.95   0.000     2.212754    3.722117
+                            |
+                  ethnicity |
+                    Fulani  |   .2580847   .1320082    -2.65   0.008      .094623    .7039276
+                     Hausa  |   .3741011    .186717    -1.97   0.049     .1405315    .9958743
+                    Ibibio  |   .7420679   .3661141    -0.60   0.546     .2819142    1.953307
+                     Igala  |   .3111028   .1911623    -1.90   0.058     .0931985    1.038482
+                      Igbo  |   .5107584   .2545533    -1.35   0.178       .19214    1.357729
+                 Ijaw/Izon  |   .5351028   .2711749    -1.23   0.217     .1980127    1.446044
+           Kanuri/Beriberi  |   .2124955   .1402058    -2.35   0.019     .0582408    .7753038
+                       Tiv  |   .2858168   .1549344    -2.31   0.021     .0986884    .8277697
+                    Yoruba  |   .3565827   .1800093    -2.04   0.041     .1324588    .9599308
+          Other/Don't know  |   .5250167   .2440963    -1.39   0.166     .2108994    1.306986
+                            |
+                   religion |
+           other christian  |   .9763668   .1250642    -0.19   0.852     .7594261     1.25528
+                     islam  |   .9596571   .1763675    -0.22   0.823     .6691803    1.376224
+            traditionalist  |   .8650354   .5835119    -0.21   0.830     .2303289    3.248772
+                     other  |   .2476919   .1114368    -3.10   0.002     .1024752    .5986943
+                            |
+                      _cons |   .1248514    .072638    -3.58   0.000     .0398779      .39089
+---------------------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+. svy, subpop(if agevac==2): logistic basicvac i.urbrurdf i.regiondf i.matage##i.edulevel i.wealthindexur i.sexhh i.chi
+> ldsex i.bthorder i.delivery i.anc i.ethnicity i.religion
+(running logistic on estimation sample)
+
+Survey: Logistic regression
+
+Number of strata   =        12                  Number of obs     =     33,205
+Number of PSUs     =     1,389                  Population size   = 33,470.335
+                                                Subpop. no. obs   =      5,824
+                                                Subpop. size      = 5,906.2557
+                                                Design df         =      1,377
+                                                F(  41,   1337)   =      13.14
+                                                Prob > F          =     0.0000
+
+----------------------------------------------------------------------------------------------------
+                                   |             Linearized
+                          basicvac | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-----------------------------------+----------------------------------------------------------------
+                          urbrurdf |
+                            rural  |   .5923568   .0624645    -4.97   0.000     .4816643    .7284877
+                                   |
+                          regiondf |
+                       north east  |   1.123653   .2020608     0.65   0.517     .7896424    1.598947
+                       north west  |   1.056135   .2135638     0.27   0.787     .7103044    1.570344
+                       south east  |   1.285588   .3439841     0.94   0.348     .7605817     2.17299
+                      south south  |    .847717   .1718054    -0.82   0.415     .5696231    1.261578
+                       south west  |   .8798825    .172844    -0.65   0.515     .5985049    1.293546
+                                   |
+                            matage |
+                    20 - 34 years  |      1.741   .5887827     1.64   0.101     .8967694    3.380002
+                    35 - 49 years  |   2.378481   .8204412     2.51   0.012     1.208997     4.67923
+                                   |
+                          edulevel |
+                Primary education  |   1.730354   .8676344     1.09   0.274      .647068    4.627219
+              Secondary or higher  |   1.606938   .6761831     1.13   0.260     .7038936    3.668522
+                                   |
+                   matage#edulevel |
+  20 - 34 years#Primary education  |   .7006905   .3558391    -0.70   0.484     .2587445    1.897498
+20 - 34 years#Secondary or higher  |    1.10133   .4720095     0.23   0.822      .475103    2.552981
+  35 - 49 years#Primary education  |   1.085649   .6088821     0.15   0.884     .3613066     3.26214
+35 - 49 years#Secondary or higher  |   .9195693   .4012578    -0.19   0.848     .3906902    2.164395
+                                   |
+                     wealthindexur |
+                           poorer  |   1.423716   .1917232     2.62   0.009     1.093192    1.854173
+                           middle  |    1.58014   .2195184     3.29   0.001     1.203205    2.075159
+                           richer  |   2.004866   .2974567     4.69   0.000     1.498593    2.682174
+                          richest  |   2.526923   .3931003     5.96   0.000     1.862338    3.428669
+                                   |
+                             sexhh |
+                           female  |   1.068897   .1258805     0.57   0.572     .8484074    1.346689
+                                   |
+                          childsex |
+                           female  |   1.025502   .0780406     0.33   0.741     .8832896    1.190611
+                                   |
+                          bthorder |
+                   2nd - 3rd born  |   .9170896   .1072265    -0.74   0.459      .729124    1.153512
+                   4th - 5th born  |   1.009169   .1279129     0.07   0.943     .7870075    1.294045
+               6th born or higher  |   .8381488   .1184881    -1.25   0.212     .6351583    1.106013
+                                   |
+                          delivery |
+       Public or private facility  |   1.339356   .1320168     2.96   0.003     1.103879    1.625064
+                            Other  |   .7828415    .258887    -0.74   0.459     .4091969    1.497667
+                                   |
+                               anc |
+                     1 - 3 visits  |   2.062481   .2957773     5.05   0.000     1.556729    2.732542
+                 4 or more visits  |   2.739886   .3616696     7.64   0.000     2.114821    3.549698
+                                   |
+                         ethnicity |
+                           Fulani  |   .2694944   .1405433    -2.51   0.012     .0968839    .7496318
+                            Hausa  |   .3734541   .1900846    -1.94   0.053      .137595    1.013612
+                           Ibibio  |   .7363082   .3727237    -0.60   0.545     .2727704    1.987568
+                            Igala  |   .2949849   .1828803    -1.97   0.049     .0874219    .9953579
+                             Igbo  |   .5227013   .2660569    -1.27   0.203     .1925785    1.418729
+                        Ijaw/Izon  |   .5250856     .26916    -1.26   0.209     .1920961    1.435297
+                  Kanuri/Beriberi  |   .2040834   .1348283    -2.41   0.016     .0558424    .7458498
+                              Tiv  |   .3027413   .1672508    -2.16   0.031     .1024254    .8948199
+                           Yoruba  |     .36159   .1843319    -2.00   0.046     .1330173    .9829352
+                 Other/Don't know  |    .536382   .2551645    -1.31   0.191     .2109548    1.363826
+                                   |
+                          religion |
+                  other christian  |   .9419265    .120396    -0.47   0.640     .7330298    1.210354
+                            islam  |   .9217267   .1700629    -0.44   0.659     .6418201    1.323704
+                   traditionalist  |   .8414275    .562788    -0.26   0.796     .2265638    3.124949
+                            other  |   .2515563   .1103162    -3.15   0.002     .1064205    .5946275
+                                   |
+                             _cons |   .1513152   .0978404    -2.92   0.004      .042561    .5379647
+----------------------------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+. 
+. 
+. 
+. contrast matage#edulevel
+
+Contrasts of marginal linear predictions
+
+                                                Design df         =      1,377
+
+Margins      : asbalanced
+
+---------------------------------------------------
+                |         df           F        P>F
+----------------+----------------------------------
+matage#edulevel |          4        0.99     0.4106
+         Design |       1377
+---------------------------------------------------
+Note: F statistics are adjusted for the survey
+      design.
+
+. svy, subpop(if agevac==2): logistic basicvac i.regiondf i.matage i.edulevel i.urbrurdf##i.wealthindexur i.sexhh i.chi
+> ldsex i.bthorder i.delivery i.anc i.ethnicity
+(running logistic on estimation sample)
+
+Survey: Logistic regression
+
+Number of strata   =        12                  Number of obs     =     33,205
+Number of PSUs     =     1,389                  Population size   = 33,470.335
+                                                Subpop. no. obs   =      5,824
+                                                Subpop. size      = 5,906.2557
+                                                Design df         =      1,377
+                                                F(  37,   1341)   =      14.62
+                                                Prob > F          =     0.0000
+
+---------------------------------------------------------------------------------------------
+                            |             Linearized
+                   basicvac | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+----------------------------+----------------------------------------------------------------
+                   regiondf |
+                north east  |   1.061207   .1865155     0.34   0.735     .7517323    1.498087
+                north west  |   .9977094    .201299    -0.01   0.991     .6716045    1.482158
+                south east  |   1.363459   .3760392     1.12   0.261     .7937357    2.342115
+               south south  |   .8583456   .1720593    -0.76   0.446      .579275    1.271861
+                south west  |   .8313365   .1683331    -0.91   0.362     .5588172    1.236756
+                            |
+                     matage |
+             20 - 34 years  |   1.696558   .3327158     2.70   0.007     1.154758    2.492566
+             35 - 49 years  |   2.269572   .5080197     3.66   0.000     1.462998    3.520822
+                            |
+                   edulevel |
+         Primary education  |   1.511177   .2153175     2.90   0.004     1.142685      1.9985
+       Secondary or higher  |   1.797614   .2342349     4.50   0.000     1.392145    2.321178
+                            |
+                   urbrurdf |
+                     rural  |   .8771432   .1999782    -0.57   0.565     .5608362    1.371845
+                            |
+              wealthindexur |
+                    poorer  |    1.38682   .2617343     1.73   0.083     .9577049    2.008208
+                    middle  |   1.727508   .3376697     2.80   0.005     1.177314    2.534824
+                    richer  |   3.102957   .6691176     5.25   0.000     2.032648    4.736845
+                   richest  |    3.21074   .7226349     5.18   0.000     2.064706    4.992889
+                            |
+     urbrurdf#wealthindexur |
+              rural#poorer  |   1.000194   .2574182     0.00   0.999      .603697    1.657102
+              rural#middle  |   .7827056   .2105043    -0.91   0.362     .4618183    1.326557
+              rural#richer  |   .4122721   .1194804    -3.06   0.002     .2334966    .7279262
+             rural#richest  |   .5664095    .164137    -1.96   0.050     .3208101     1.00003
+                            |
+                      sexhh |
+                    female  |   1.083974   .1285717     0.68   0.497     .8589503    1.367949
+                            |
+                   childsex |
+                    female  |   1.025053   .0799121     0.32   0.751     .8796892    1.194438
+                            |
+                   bthorder |
+            2nd - 3rd born  |   .9075873   .1054961    -0.83   0.404     .7225359    1.140033
+            4th - 5th born  |   1.013003   .1271886     0.10   0.918      .791851     1.29592
+        6th born or higher  |   .8566833   .1217437    -1.09   0.277       .64826    1.132117
+                            |
+                   delivery |
+Public or private facility  |   1.318165   .1324141     2.75   0.006     1.082402    1.605281
+                     Other  |   .7742887   .2612732    -0.76   0.449     .3994146    1.501004
+                            |
+                        anc |
+              1 - 3 visits  |   2.148233   .3078078     5.34   0.000     1.621849     2.84546
+          4 or more visits  |   2.871067    .380231     7.96   0.000      2.21419    3.722817
+                            |
+                  ethnicity |
+                    Fulani  |   .2533762   .1293326    -2.69   0.007     .0930891    .6896564
+                     Hausa  |   .3671089    .182801    -2.01   0.044     .1382191    .9750381
+                    Ibibio  |   .7170132   .3533073    -0.68   0.500      .272728    1.885057
+                     Igala  |   .3078421   .1893018    -1.92   0.056     .0921376    1.028535
+                      Igbo  |   .5090026   .2541205    -1.35   0.176     .1911534     1.35537
+                 Ijaw/Izon  |   .4713657   .2357231    -1.50   0.133     .1767299    1.257205
+           Kanuri/Beriberi  |   .2086037   .1374487    -2.38   0.018     .0572761    .7597503
+                       Tiv  |   .2883282   .1543514    -2.32   0.020     .1008813     .824069
+                    Yoruba  |   .3502219   .1764372    -2.08   0.037     .1303593    .9409027
+          Other/Don't know  |   .5189225   .2418088    -1.41   0.159     .2080217    1.294484
+                            |
+                      _cons |   .1217324   .0693795    -3.70   0.000      .039797    .3723594
+---------------------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+. contrast i.urbrurdf#i.wealthindexur
+
+Contrasts of marginal linear predictions
+
+                                                Design df         =      1,377
+
+Margins      : asbalanced
+
+----------------------------------------------------------
+                       |         df           F        P>F
+-----------------------+----------------------------------
+urbrurdf#wealthindexur |          4        3.58     0.0065
+                Design |       1377
+----------------------------------------------------------
+Note: F statistics are adjusted for the survey design.
+
+. svy, subpop(if agevac==2): tab basicvac ethnicity, ci col obs
+(running tabulate on estimation sample)
+
+Number of strata   =        12                  Number of obs     =     33,440
+Number of PSUs     =     1,389                  Population size   = 33,707.416
+                                                Subpop. no. obs   =      6,059
+                                                Subpop. size      = 6,143.3375
+                                                Design df         =      1,377
+
+-------------------------------------------------------------------------------------
+Received  |
+all basic |
+vaccinati |                                 Ethnicity                                
+ons       |          Ekoi         Fulani          Hausa         Ibibio          Igala
+----------+--------------------------------------------------------------------------
+ No/Don't |         .4851          .8783          .8008          .5786          .7236
+          | [.2909,.6838]  [.8382,.9096]  [.7717,.8271]  [.4686,.6812]  [.5347,.8565]
+          |            12            494           1442             61             40
+          | 
+      Yes |         .5149          .1217          .1992          .4214          .2764
+          | [.3162,.7091]  [.0904,.1618]  [.1729,.2283]  [.3188,.5314]  [.1435,.4653]
+          |            13             74            354             44             15
+          | 
+    Total |             1              1              1              1              1
+          |                                                                          
+          |            25            568           1796            105             55
+-------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------
+Received  |
+all basic |
+vaccinati |                                 Ethnicity                                
+ons       |          Igbo       Ijaw/Izo       Kanuri/B            Tiv         Yoruba
+----------+--------------------------------------------------------------------------
+ No/Don't |         .4372          .6648          .8558           .754          .5923
+          | [.3888,.4868]  [.5629,.7534]  [.7729,.9118]  [.6552,.8317]   [.5386,.644]
+          |           403            127            125            114            365
+          | 
+      Yes |         .5628          .3352          .1442           .246          .4077
+          | [.5132,.6112]  [.2466,.4371]  [.0882,.2271]  [.1683,.3448]   [.356,.4614]
+          |           444             44             23             34            257
+          | 
+    Total |             1              1              1              1              1
+          |                                                                          
+          |           847            171            148            148            622
+-------------------------------------------------------------------------------------
+
+----------------------------------------
+Received  |
+all basic |
+vaccinati |          Ethnicity          
+ons       |      Other/Do          Total
+----------+-----------------------------
+ No/Don't |          .641          .6882
+          | [.6046,.6759]  [.6693,.7064]
+          |          1026           4209
+          | 
+      Yes |          .359          .3118
+          | [.3241,.3954]  [.2936,.3307]
+          |           548           1850
+          | 
+    Total |             1              1
+          |                             
+          |          1574           6059
+----------------------------------------
+  Key:  column proportion
+        [95% confidence interval for column proportion]
+        number of observations
+
+  Pearson:
+    Uncorrected   chi2(10)        = 2920.2214
+    Design-based  F(9.17, 12624.51)=   32.9072    P = 0.0000
+
+. 
+. svy, subpop(if agevac==2): logistic basicvac i.ethnicity, base
+(running logistic on estimation sample)
+
+Survey: Logistic regression
+
+Number of strata   =        12                  Number of obs     =     33,440
+Number of PSUs     =     1,389                  Population size   = 33,707.416
+                                                Subpop. no. obs   =      6,059
+                                                Subpop. size      = 6,143.3375
+                                                Design df         =      1,377
+                                                F(  10,   1368)   =      22.76
+                                                Prob > F          =     0.0000
+
+-----------------------------------------------------------------------------------
+                  |             Linearized
+         basicvac | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+------------------+----------------------------------------------------------------
+        ethnicity |
+            Ekoi  |          1  (base)
+          Fulani  |   .1305176   .0594221    -4.47   0.000     .0534309    .3188201
+           Hausa  |    .234265   .1013433    -3.35   0.001     .1002658     .547346
+          Ibibio  |   .6861148   .3275599    -0.79   0.430     .2689459    1.750365
+           Igala  |   .3597349   .2145566    -1.71   0.087     .1116488    1.159074
+            Igbo  |   1.212801   .5294728     0.44   0.659     .5150551    2.855786
+       Ijaw/Izon  |   .4748852   .2266654    -1.56   0.119     .1861864    1.211238
+ Kanuri/Beriberi  |   .1587714   .0808906    -3.61   0.000     .0584416    .4313429
+             Tiv  |   .3074026   .1502041    -2.41   0.016     .1178758    .8016604
+          Yoruba  |   .6482839   .2840189    -0.99   0.323     .2744847    1.531131
+Other/Don't know  |   .5275056   .2274446    -1.48   0.138      .226408     1.22903
+                  |
+            _cons |   1.061619   .4497401     0.14   0.888     .4624361    2.437169
+-----------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+. 
+. test 2.ethnicity 3.ethnicity 4.ethnicity 5.ethnicity 6.ethnicity 7.ethnicity 8.ethnic
+> ity 9.ethnicity 10.ethnicity 11.ethnicity
+
+Adjusted Wald test
+
+ ( 1)  [basicvac]2.ethnicity = 0
+ ( 2)  [basicvac]3.ethnicity = 0
+ ( 3)  [basicvac]4.ethnicity = 0
+ ( 4)  [basicvac]5.ethnicity = 0
+ ( 5)  [basicvac]6.ethnicity = 0
+ ( 6)  [basicvac]7.ethnicity = 0
+ ( 7)  [basicvac]8.ethnicity = 0
+ ( 8)  [basicvac]9.ethnicity = 0
+ ( 9)  [basicvac]10.ethnicity = 0
+ (10)  [basicvac]11.ethnicity = 0
+
+       F( 10,  1368) =   22.76
+            Prob > F =    0.0000
+
+. svy, subpop(if agevac==2): logistic basicvac i.sexhh, base
+(running logistic on estimation sample)
+
+Survey: Logistic regression
+
+Number of strata   =        12                  Number of obs     =     33,440
+Number of PSUs     =     1,389                  Population size   = 33,707.416
+                                                Subpop. no. obs   =      6,059
+                                                Subpop. size      = 6,143.3375
+                                                Design df         =      1,377
+                                                F(   1,   1377)   =      14.17
+                                                Prob > F          =     0.0002
+
+------------------------------------------------------------------------------
+             |             Linearized
+    basicvac | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       sexhh |
+       male  |          1  (base)
+     female  |   1.477224   .1531106     3.76   0.000     1.205435    1.810293
+             |
+       _cons |   .4354212   .0202595   -17.87   0.000     .3974382    .4770342
+------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+. svy, subpop(if agevac==2): logistic basicvac i.regiondf i.matage i.edulevel i.urbrurd
+> f##i.wealthindexur i.sexhh i.childsex i.bthorder i.delivery i.anc i.ethnicity
+(running logistic on estimation sample)
+
+Survey: Logistic regression
+
+Number of strata   =        12                  Number of obs     =     33,205
+Number of PSUs     =     1,389                  Population size   = 33,470.335
+                                                Subpop. no. obs   =      5,824
+                                                Subpop. size      = 5,906.2557
+                                                Design df         =      1,377
+                                                F(  37,   1341)   =      14.62
+                                                Prob > F          =     0.0000
+
+--------------------------------------------------------------------------------------
+                     |             Linearized
+            basicvac | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------+----------------------------------------------------------------
+            regiondf |
+         north east  |   1.061207   .1865155     0.34   0.735     .7517323    1.498087
+         north west  |   .9977094    .201299    -0.01   0.991     .6716045    1.482158
+         south east  |   1.363459   .3760392     1.12   0.261     .7937357    2.342115
+        south south  |   .8583456   .1720593    -0.76   0.446      .579275    1.271861
+         south west  |   .8313365   .1683331    -0.91   0.362     .5588172    1.236756
+                     |
+              matage |
+      20 - 34 years  |   1.696558   .3327158     2.70   0.007     1.154758    2.492566
+      35 - 49 years  |   2.269572   .5080197     3.66   0.000     1.462998    3.520822
+                     |
+            edulevel |
+  Primary education  |   1.511177   .2153175     2.90   0.004     1.142685      1.9985
+Secondary or higher  |   1.797614   .2342349     4.50   0.000     1.392145    2.321178
+                     |
+            urbrurdf |
+              rural  |   .8771432   .1999782    -0.57   0.565     .5608362    1.371845
+                     |
+       wealthindexur |
+             poorer  |    1.38682   .2617343     1.73   0.083     .9577049    2.008208
+             middle  |   1.727508   .3376697     2.80   0.005     1.177314    2.534824
+             richer  |   3.102957   .6691176     5.25   0.000     2.032648    4.736845
+            richest  |    3.21074   .7226349     5.18   0.000     2.064706    4.992889
+                     |
+            urbrurdf#|
+       wealthindexur |
+       rural#poorer  |   1.000194   .2574182     0.00   0.999      .603697    1.657102
+       rural#middle  |   .7827056   .2105043    -0.91   0.362     .4618183    1.326557
+       rural#richer  |   .4122721   .1194804    -3.06   0.002     .2334966    .7279262
+      rural#richest  |   .5664095    .164137    -1.96   0.050     .3208101     1.00003
+                     |
+               sexhh |
+             female  |   1.083974   .1285717     0.68   0.497     .8589503    1.367949
+                     |
+            childsex |
+             female  |   1.025053   .0799121     0.32   0.751     .8796892    1.194438
+                     |
+            bthorder |
+     2nd - 3rd born  |   .9075873   .1054961    -0.83   0.404     .7225359    1.140033
+     4th - 5th born  |   1.013003   .1271886     0.10   0.918      .791851     1.29592
+ 6th born or higher  |   .8566833   .1217437    -1.09   0.277       .64826    1.132117
+                     |
+            delivery |
+Public or private..  |   1.318165   .1324141     2.75   0.006     1.082402    1.605281
+              Other  |   .7742887   .2612732    -0.76   0.449     .3994146    1.501004
+                     |
+                 anc |
+       1 - 3 visits  |   2.148233   .3078078     5.34   0.000     1.621849     2.84546
+   4 or more visits  |   2.871067    .380231     7.96   0.000      2.21419    3.722817
+                     |
+           ethnicity |
+             Fulani  |   .2533762   .1293326    -2.69   0.007     .0930891    .6896564
+              Hausa  |   .3671089    .182801    -2.01   0.044     .1382191    .9750381
+             Ibibio  |   .7170132   .3533073    -0.68   0.500      .272728    1.885057
+              Igala  |   .3078421   .1893018    -1.92   0.056     .0921376    1.028535
+               Igbo  |   .5090026   .2541205    -1.35   0.176     .1911534     1.35537
+          Ijaw/Izon  |   .4713657   .2357231    -1.50   0.133     .1767299    1.257205
+    Kanuri/Beriberi  |   .2086037   .1374487    -2.38   0.018     .0572761    .7597503
+                Tiv  |   .2883282   .1543514    -2.32   0.020     .1008813     .824069
+             Yoruba  |   .3502219   .1764372    -2.08   0.037     .1303593    .9409027
+   Other/Don't know  |   .5189225   .2418088    -1.41   0.159     .2080217    1.294484
+                     |
+               _cons |   .1217324   .0693795    -3.70   0.000      .039797    .3723594
+--------------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+. svy, subpop(if agevac==2): logistic basicvac i.regiondf i.matage i.edulevel i.urbrurd
+> f##i.wealthindexur i.sexhh i.childsex i.bthorder i.delivery i.anc i.ethnicity i.relig
+> ion
+(running logistic on estimation sample)
+
+Survey: Logistic regression
+
+Number of strata   =        12                  Number of obs     =     33,205
+Number of PSUs     =     1,389                  Population size   = 33,470.335
+                                                Subpop. no. obs   =      5,824
+                                                Subpop. size      = 5,906.2557
+                                                Design df         =      1,377
+                                                F(  41,   1337)   =      13.55
+                                                Prob > F          =     0.0000
+
+--------------------------------------------------------------------------------------
+                     |             Linearized
+            basicvac | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------+----------------------------------------------------------------
+            regiondf |
+         north east  |   1.064602   .1889884     0.35   0.724     .7515347    1.508085
+         north west  |   .9999691   .2021843    -0.00   1.000     .6725589    1.486767
+         south east  |   1.351817   .3801559     1.07   0.284     .7786345     2.34694
+        south south  |   .8555414   .1733141    -0.77   0.441     .5749822    1.272998
+         south west  |   .8284993   .1691533    -0.92   0.357      .555074    1.236612
+                     |
+              matage |
+      20 - 34 years  |   1.686817    .328825     2.68   0.007     1.150775    2.472553
+      35 - 49 years  |   2.252897   .5010165     3.65   0.000     1.456392    3.485015
+                     |
+            edulevel |
+  Primary education  |   1.505898   .2126577     2.90   0.004     1.141527    1.986575
+Secondary or higher  |   1.789589   .2337702     4.46   0.000     1.385048    2.312287
+                     |
+            urbrurdf |
+              rural  |   .8754689   .1995537    -0.58   0.560     .5598192    1.369095
+                     |
+       wealthindexur |
+             poorer  |   1.383073   .2610274     1.72   0.086     .9551171    2.002782
+             middle  |   1.725822   .3382352     2.78   0.005     1.174969    2.534927
+             richer  |   3.103718   .6698472     5.25   0.000      2.03242    4.739701
+            richest  |   3.212402   .7240043     5.18   0.000      2.06452    4.998511
+                     |
+            urbrurdf#|
+       wealthindexur |
+       rural#poorer  |   1.003363   .2581765     0.01   0.990     .6056783    1.662166
+       rural#middle  |   .7841059   .2117364    -0.90   0.368     .4616553    1.331777
+       rural#richer  |   .4120761   .1197491    -3.05   0.002     .2330243    .7287083
+      rural#richest  |   .5696983   .1648864    -1.94   0.052     .3228992    1.005132
+                     |
+               sexhh |
+             female  |   1.088939   .1294177     0.72   0.474     .8624844    1.374851
+                     |
+            childsex |
+             female  |   1.023517   .0798399     0.30   0.766     .8782903    1.192756
+                     |
+            bthorder |
+     2nd - 3rd born  |   .9104449   .1051639    -0.81   0.417     .7258492    1.141986
+     4th - 5th born  |   1.014468   .1274477     0.11   0.909     .7928809    1.297983
+ 6th born or higher  |   .8608859   .1223376    -1.05   0.292      .651445    1.137662
+                     |
+            delivery |
+Public or private..  |   1.320367   .1330413     2.76   0.006     1.083556    1.608933
+              Other  |   .7719537   .2608897    -0.77   0.444      .397801    1.498017
+                     |
+                 anc |
+       1 - 3 visits  |   2.150594   .3083433     5.34   0.000      1.62334    2.849099
+   4 or more visits  |   2.869865   .3804089     7.95   0.000     2.212754    3.722117
+                     |
+           ethnicity |
+             Fulani  |   .2580847   .1320082    -2.65   0.008      .094623    .7039276
+              Hausa  |   .3741011    .186717    -1.97   0.049     .1405315    .9958743
+             Ibibio  |   .7420679   .3661141    -0.60   0.546     .2819142    1.953307
+              Igala  |   .3111028   .1911623    -1.90   0.058     .0931985    1.038482
+               Igbo  |   .5107584   .2545533    -1.35   0.178       .19214    1.357729
+          Ijaw/Izon  |   .5351028   .2711749    -1.23   0.217     .1980127    1.446044
+    Kanuri/Beriberi  |   .2124955   .1402058    -2.35   0.019     .0582408    .7753038
+                Tiv  |   .2858168   .1549344    -2.31   0.021     .0986884    .8277697
+             Yoruba  |   .3565827   .1800093    -2.04   0.041     .1324588    .9599308
+   Other/Don't know  |   .5250167   .2440963    -1.39   0.166     .2108994    1.306986
+                     |
+            religion |
+    other christian  |   .9763668   .1250642    -0.19   0.852     .7594261     1.25528
+              islam  |   .9596571   .1763675    -0.22   0.823     .6691803    1.376224
+     traditionalist  |   .8650354   .5835119    -0.21   0.830     .2303289    3.248772
+              other  |   .2476919   .1114368    -3.10   0.002     .1024752    .5986943
+                     |
+               _cons |   .1248514    .072638    -3.58   0.000     .0398779      .39089
+--------------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+. gen basicvac2 = basicvac if agevac==2
+variable basicvac2 already defined
+r(110);
+
+. 
+. gen polioall2 = polioall if agevac==2
+variable polioall2 already defined
+r(110);
+
+. 
+. gen dptall2 = dptall if agevac==2
+variable dptall2 already defined
+r(110);
+
+. 
+. gen measles1age = measles1 if agevac==2
+variable measles1age already defined
+r(110);
+
+. 
+. gen bcg2 = bcg if agevac==2
+variable bcg2 already defined
+r(110);
+
+. 
+. gen healthcard2 = healthcard if agevac==2
+variable healthcard2 already defined
+r(110);
+
+. 
+. gen nobasicv2 = nobasicv if agevac==2
+(27,865 missing values generated)
+
+. 
+. gen nopolio2 = nopolio if agevac==2
+(27,865 missing values generated)
+
+. 
+. gen nodpt2 = nodpt if agevac==2
+(27,865 missing values generated)
+
+. svyset v021 [pweight=weight], strata(strata)single(cen)
+
+      pweight: weight
+          VCE: linearized
+  Single unit: centered
+     Strata 1: strata
+         SU 1: v021
+        FPC 1: <zero>
+
+. 
+. conindex nobasicv2 rankvar(wealthindexur) limits(0 1) bounded erreyger svy
+factor-variable and time-series operators not allowed
+r(101);
+
+. 
+. svyset v021 [pweight=weight], strata(strata)single(cen)
+
+      pweight: weight
+          VCE: linearized
+  Single unit: centered
+     Strata 1: strata
+         SU 1: v021
+        FPC 1: <zero>
+
+. 
+. conindex nobasicv2, rankvar(matage) limits(0 1) bounded erreyger svy
+------------------------------------------------------------------------------+
+Index:             | No. of obs. | Index value | Std. error        | p-value  |
+-------------------+-------------+-------------+-------------------+----------|
+Erreygers norm. CI | 6059        | .02764855   |.01150125          |  0.0164  |
+------------------------------------------------------------------------------+
+
+. 
+. svyset v021 [pweight=weight], strata(strata)single(cen)
+
+      pweight: weight
+          VCE: linearized
+  Single unit: centered
+     Strata 1: strata
+         SU 1: v021
+        FPC 1: <zero>
+
+. 
+. conindex nobasicv2, rankvar(edulevel) limits(0 1) bounded erreyger svy
+------------------------------------------------------------------------------+
+Index:             | No. of obs. | Index value | Std. error        | p-value  |
+-------------------+-------------+-------------+-------------------+----------|
+Erreygers norm. CI | 6059        | .27518702   |.01647935          |  0.0000  |
+------------------------------------------------------------------------------+
+
+. 
+. svyset v021 [pweight=weight], strata(strata)single(cen)
+
+      pweight: weight
+          VCE: linearized
+  Single unit: centered
+     Strata 1: strata
+         SU 1: v021
+        FPC 1: <zero>
+
+. 
+. conindex nobasicv2, rankvar(anc) limits(0 1) bounded erreyger svy
+------------------------------------------------------------------------------+
+Index:             | No. of obs. | Index value | Std. error        | p-value  |
+-------------------+-------------+-------------+-------------------+----------|
+Erreygers norm. CI | 5824        | .2874322    |.01781004          |  0.0000  |
+------------------------------------------------------------------------------+
+
+. exit, clear
